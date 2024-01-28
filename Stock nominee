@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract StockNominee {
+    address public owner;
+    mapping(address => address) public nominees;
+    uint256 public totalNominees;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function eligibilityForNominee(address _nominee, uint256 _age, uint256 _numInvestments) external {
+      
+        assert(msg.sender == owner);
+        assert(totalNominees < 2);
+        require(_age >= 18, "Nominee must be at least 18 years old");
+        require(_numInvestments <= 5, "Nominee should not be invested in more than  5 companies");
+
+        nominees[_nominee] = _nominee;
+        totalNominees++;
+    }
+
+    function shareDistribution(string memory _nomineeNumber) external {
+        
+        if (keccak256(abi.encodePacked(_nomineeNumber)) == keccak256(abi.encodePacked("NOM12345")) ||
+            keccak256(abi.encodePacked(_nomineeNumber)) == keccak256(abi.encodePacked("NOM6789"))) {
+            revert("You are registered as a nominee and eligible for owner shares");
+        }
+
+        totalNominees = 0;
+    }
+
+   
+    
+}
